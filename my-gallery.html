@@ -1,0 +1,62 @@
+<section>
+    <div class="form-inline">
+        <div class="form-group mg-r-m" ng-show="search">
+            <label for="search">Search</label>
+            <input id="search" class="form-control" type="text" ng-model="searchText" placeholder="Search text..." />
+            <button class="btn btn-md btn-default" ng-click="searchGo(searchText)">Search</button>
+        </div>
+        <div class="form-group mg-r-m">
+            <label for="per-page">Items per page</label>
+            <select id="per-page" class="form-control " ng-model="itemsPerPage" ng-change="groupToPages(); currentPage = 0;"
+                    ng-options="item for item in itemsRange track by item">
+            </select>
+        </div>
+        <div class="form-group mg-r-m" ng-show="sorting">
+            <label for="sorting">Sort</label>
+            <select id="sorting" class="form-control" ng-model="sort" ng-selected="sort">
+                <option value="title">Title</option>
+                <option value="date">Date</option>
+            </select>
+        </div>
+        <ul class="pagination pull-right">
+            <li>
+                <a href ng-click="changePage('down');">
+                    <span aria-hidden="true">&laquo;</span>
+                </a>
+            </li>
+            <li ng-repeat="page in range(pagedItems.length)" ng-class="{'active': currentPage == $index}">
+                <a href ng-click="changePage($index)">{{$index+1}}</a>
+            </li>
+            <li>
+                <a href ng-click="changePage('up')">
+                    <span aria-hidden="true">&raquo;</span>
+                </a>
+            </li>
+        </ul>
+    </div>
+</section>
+
+<section class="col-md-4">
+    <div id="carousel"  class="carousel slide" data-ride="carousel">
+        <div class="carousel-inner">
+            <div class="item" ng-repeat="image in activeImages"  role="listbox" ng-class="{'active': !$index}">
+                <img ng-src="{{image.url}}"/>
+            </div>
+        </div>
+
+        <a id="control-left" class="left carousel-control" href="#carousel" role="button" data-slide="prev">
+            <span class="glyphicon glyphicon-chevron-left"></span>
+        </a>
+        <a id="control-right" class="right carousel-control" href="#carousel" role="button" data-slide="next">
+            <span class="glyphicon glyphicon-chevron-right"></span>
+        </a>
+    </div>
+</section>
+
+<section class="col-md-8 gallery ">
+    <div class="gallery-items" ng-repeat="image in pagedItems[currentPage] | orderBy: sort | limitTo: itemsPerPage ">
+        <img check-image class="gallery-item" ng-src="{{image.url}}" ng-click="resizeImage(image)"/>
+        <span class="remove glyphicon glyphicon-remove" ng-click="removeImage(image)"></span>
+    </div>
+</section>
+
